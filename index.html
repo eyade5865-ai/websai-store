@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>website store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght=400;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <style>
+        :root {
+            --primary: #6366f1; 
+            --accent: #06b6d4; 
+            --bg: #0f172a; 
+            --card-bg: #1e293b; 
+            --text: #f8fafc; 
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --font-main: 'Cairo', sans-serif;
+            --shadow-sm: 0 4px 12px rgba(0,0,0,0.15);
+            --shadow-lg: 0 20px 40px rgba(0,0,0,0.4);
+            --radius-sm: 12px;
+            --radius-md: 24px;
+            --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); }
+        body { background-color: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; }
+
+        header {
+            background: rgba(30, 41, 59, 0.8); padding: 15px 5%;
+            display: flex; justify-content: space-between; align-items: center;
+            position: fixed; width: 100%; top: 0; z-index: 1000;
+            box-shadow: var(--shadow-sm); backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .logo { font-size: 22px; font-weight: 800; text-transform: uppercase; color: var(--accent); }
+        .logo span { color: var(--text); }
+        .header-actions { display: flex; align-items: center; gap: 20px; }
+
+        .action-item { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
+        .action-label { font-size: 11px; font-weight: 600; color: var(--text-muted); transition: var(--transition); }
+        .action-item:hover .action-label { color: var(--accent); }
+
+        .icon-btn {
+            position: relative; font-size: 16px;
+            width: 42px; height: 42px; border: 1px solid rgba(255,255,255,0.1);
+            display: flex; align-items: center; justify-content: center; border-radius: 50%;
+            background: var(--card-bg); transition: var(--transition); color: var(--text);
+        }
+        .action-item:hover .icon-btn { border-color: var(--accent); color: var(--accent); transform: translateY(-3px); }
+
+        .cart-count {
+            position: absolute; top: -3px; right: -3px; background: var(--accent);
+            color: #0f172a; font-size: 10px; width: 18px; height: 18px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: 700; box-shadow: 0 4px 10px rgba(6,182,212,0.4);
+        }
+
+        .container { max-width: 1200px; margin: 140px auto 40px; padding: 0 16px; }
+        .section-title { text-align: center; margin-bottom: 30px; font-size: 24px; color: var(--text); font-weight: 800; }
+        .section-title::after { content: ''; display: block; width: 50px; height: 4px; background: var(--accent); margin: 8px auto 0; border-radius: 10px; }
+        
+        .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+
+        .product-card { 
+            background: var(--card-bg); border: 1px solid rgba(255,255,255,0.02); transition: var(--transition); 
+            cursor: pointer; border-radius: var(--radius-md); overflow: hidden; 
+            display: flex; flex-direction: column; justify-content: space-between; box-shadow: var(--shadow-sm);
+        }
+        .product-card:hover { transform: translateY(-5px); border-color: rgba(6,182,212,0.3); box-shadow: var(--shadow-lg); }
+        
+        .product-img-wrapper { width: 100%; height: 160px; overflow: hidden; background: #121b2e; }
+        .product-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s; }
+        
+        .product-info { padding: 14px; text-align: center; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .product-info h4 { font-size: 14px; font-weight: 700; margin-bottom: 8px; color: var(--text); height: 42px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        .product-info p { font-size: 16px; font-weight: 800; color: var(--accent); }
+
+        .modal, .sidebar-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); display: none; z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(12px); }
+        .modal.active, .sidebar-overlay.active { display: flex; }
+        
+        .modal-content { 
+            background: var(--card-bg); width: 95%; max-width: 480px; 
+            display: flex; flex-direction: column; position: relative; 
+            border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-lg);
+            max-height: 90vh; overflow-y: auto; border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .modal-close { position: absolute; top: 12px; left: 12px; cursor: pointer; font-size: 18px; z-index: 5; background: rgba(30,41,59,0.9); width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: var(--text); }
+        .modal-slider-container { position: relative; width: 100%; height: 240px; overflow: hidden; }
+        .modal-img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .slide-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(255,255,255,0.1); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; color: var(--text); }
+        .slide-btn.prev { right: 12px; }
+        .slide-btn.next { left: 12px; }
+
+        .sidebar { position: fixed; top: 0; right: -100%; width: 100%; max-width: 420px; height: 100%; background: var(--card-bg); z-index: 3000; transition: var(--transition); padding: 24px; display: flex; flex-direction: column; box-shadow: -10px 0 40px rgba(0,0,0,0.3); border-left: 1px solid rgba(255,255,255,0.05); }
+        .sidebar.active { right: 0; }
+        .sidebar-scrollable { flex: 1; overflow-y: auto; padding-right: 5px; }
+
+        .btn { width: 100%; padding: 14px; border: none; cursor: pointer; font-weight: 700; margin-top: 12px; transition: var(--transition); border-radius: var(--radius-sm); font-size: 15px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-buy { background: var(--accent); color: #0f172a; box-shadow: 0 5px 15px rgba(6,182,212,0.2); }
+        
+        .payment-methods-toggle { display: flex; gap: 10px; margin: 15px 0; }
+        .method-btn { flex: 1; padding: 12px; border: 1px solid rgba(255,255,255,0.1); background: #0f172a; color: white; border-radius: var(--radius-sm); cursor: pointer; font-weight: 700; font-size: 13px; transition: var(--transition); text-align: center; }
+        .method-btn.active { background: var(--primary); border-color: var(--primary); }
+
+        .quantity-container { display: flex; flex-wrap: wrap; gap: 10px; margin: 15px 0; justify-content: center; }
+        .qty-btn { padding: 10px 16px; border: 1px solid rgba(255,255,255,0.1); background: #1e293b; cursor: pointer; border-radius: var(--radius-sm); font-weight: 700; color: var(--text); }
+        .qty-btn.selected { background: var(--accent); color: #0f172a; border-color: var(--accent); }
+
+        .input-field { width: 100%; padding: 14px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-sm); font-size: 14px; outline: none; background: #0f172a; font-weight: 600; color: white; }
+        .input-field:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(6,182,212,0.15); }
+
+        #success-screen { position: fixed; inset: 0; background: var(--bg); z-index: 10000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 16px; }
+        .success-circle { width: 100px; height: 100px; border-radius: 50%; background: var(--success); color: white; display: flex; align-items: center; justify-content: center; font-size: 46px; margin-bottom: 20px; }
+
+        .cart-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .cart-item-details { flex-grow: 1; margin-right: 12px; text-align: right; }
+        .cart-item-title { font-size: 13px; font-weight: 700; color: var(--text); }
+        .cart-item-price { font-size: 14px; color: var(--accent); font-weight: 800; }
+        .remove-item { color: #f43f5e; cursor: pointer; padding: 5px; }
+
+        .info-box { background: #0f172a; padding: 16px; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.05); margin-bottom: 12px; }
+        .info-box span { display: block; font-size: 12px; color: var(--text-muted); }
+        .info-box p { font-size: 15px; font-weight: 700; color: var(--text); margin-top: 2px; }
+        
+        .order-history-title { font-weight: 800; font-size: 15px; color: var(--accent); margin-top: 15px; margin-bottom: 10px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; }
+
+        @media (min-width: 576px) { .products-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; } .product-img-wrapper { height: 180px; } }
+        @media (min-width: 768px) {
+            .products-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 24px; }
+            .product-img-wrapper { height: 230px; }
+            .modal-content { flex-direction: row; max-width: 680px; }
+            .modal-slider-container { width: 320px; min-height: 360px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo"> website <span>store</span></div>
+        <div class="header-actions">
+            <div class="action-item" id="accountIconBtn">
+                <div class="icon-btn"><i class="fas fa-user"></i></div>
+                <span class="action-label">حسابي</span>
+            </div>
+            <div class="action-item" id="cartIconBtn">
+                <div class="icon-btn">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </div>
+                <span class="action-label">السلة</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2 class="section-title">أهلاً بك في website store</h2>
+        <div class="products-grid" id="grid"></div>
+    </div>
+
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <div class="modal-slider-container">
+                <button class="slide-btn prev" onclick="changeSlide(-1); event.stopPropagation();"><i class="fas fa-chevron-right"></i></button>
+                <img id="mImg" src="" class="modal-img">
+                <button class="slide-btn next" onclick="changeSlide(1); event.stopPropagation();"><i class="fas fa-chevron-left"></i></button>
+            </div>
+            <div style="padding: 24px; flex: 1; display: flex; flex-direction: column; justify-content: center;">
+                <h2 id="mTitle" style="font-size: 16px; margin-bottom: 8px; font-weight: 700;"></h2>
+                <h3 id="mPrice" style="color: var(--accent); margin-bottom: 20px; font-size: 20px; font-weight: 800;"></h3>
+                <p style="font-weight: 700; color: var(--text-muted); font-size: 13px;">اختر عدد السلعات:</p>
+                <div id="mQuantities" class="quantity-container"></div>
+                <button class="btn btn-buy" id="addToCartBtn"><i class="fas fa-cart-plus"></i> إضافة للسلة</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar-overlay" id="overlay" onclick="closeAllSidebars()"></div>
+
+    <div class="sidebar" id="sidebar">
+        <div id="step1" style="display: flex; flex-direction: column; height: 100%;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="font-weight: 800; font-size: 18px;">سلة المشتريات</h3>
+                <i class="fas fa-times" onclick="closeAllSidebars()" style="cursor: pointer;"></i>
+            </div>
+            <div id="cartItems" class="sidebar-scrollable"></div>
+            <div style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
+                <h4 style="display: flex; justify-content: space-between; font-size: 18px; font-weight: 800; margin-bottom: 12px;">
+                    <span>الإجمالي:</span>
+                    <span><span id="totalPrice" style="color:var(--accent)">0</span> جنيه</span>
+                </h4>
+                <button class="btn btn-buy" id="toStep2Btn">إتمام الطلب وبيانات الشحن <i class="fas fa-chevron-left"></i></button>
+            </div>
+        </div>
+
+        <div id="step2" style="display: none; flex-direction: column; height: 100%;">
+            <h3 id="backToStep1Btn" style="cursor: pointer; margin-bottom: 15px; font-weight: 800; display: flex; align-items: center; gap: 8px; font-size: 18px;">
+                <i class="fas fa-arrow-right" style="color: var(--accent)"></i> بيانات الشحن والدفع
+            </h3>
+            
+            <div class="sidebar-scrollable">
+                <input type="text" id="uName" class="input-field" placeholder="الاسم بالكامل">
+                <input type="tel" id="uPhone" class="input-field" placeholder="رقم الموبايل للتواصل">
+                <input type="text" id="uAddress" class="input-field" placeholder="العنوان بالتفصيل">
+                
+                <p style="font-weight: 700; font-size: 14px; margin: 10px 0 5px; color: var(--text-muted);">طريقة الدفع:</p>
+                <div class="payment-methods-toggle">
+                    <button class="method-btn active" id="methodCod" type="button">كاش عند الاستلام</button>
+                    <button class="method-btn" id="methodVisa" type="button">الدفع بالفيزا</button>
+                </div>
+                
+                <button class="btn btn-buy" id="submitOrderBtn" style="margin-top: 20px;"><i class="fas fa-check-circle"></i> تأكيد وإرسال الطلب</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar" id="accountSidebar">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+            <h3 style="font-weight: 800; font-size: 18px;"><i class="fas fa-user-circle" style="color: var(--accent);"></i> حسابي الشخصي</h3>
+            <i class="fas fa-times" onclick="closeAllSidebars()" style="cursor: pointer;"></i>
+        </div>
+        <div class="sidebar-scrollable" id="accountInfoContent"></div>
+    </div>
+
+    <div id="success-screen">
+        <div class="success-circle"><i class="fas fa-check"></i></div>
+        <h1 style="font-size: 24px; font-weight: 800;">تم استلام طلبك بنجاح!</h1>
+        <p id="successMessage" style="margin: 10px 0 25px; color: var(--text-muted); font-size: 16px; font-weight: bold; text-align: center;"></p>
+        <button class="btn btn-buy" style="max-width: 200px;" id="reloadBtn">العودة للمتجر</button>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyD5aizF141eE6DXYXkD04fNlFiNRXi73Mw",
+            authDomain: "eeeee-68481.firebaseapp.com",
+            projectId: "eeeee-68481",
+            storageBucket: "eeeee-68481.firebasestorage.app",
+            messagingSenderId: "603588366719",
+            appId: "1:603588366719:web:2f737779b36c9c34c98a4a"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        const products = [
+            { id: 1, title: "كولر ماستر", img: ["WhatsApp Image 2026-06-18 at 6.06.33 PM.jpeg", "WhatsApp Image 2026-06-18 at 6.06.34 PM.jpeg"], price: 1000 },
+            { id: 2, title: "وحدة تخزين من ليكسار 1.0 تيرا بايت PCI Express x4 سعة 1.0 TB موديل NQ780 بتقنية PCIe متوافق مع سطح المكتب محرك الحالة الصلبة", img: ["WhatsApp Image 2026-06-19 at 2.33.45 PM.jpeg", "WhatsApp Image 2026-06-19 at 2.33.44 PM.jpeg"], price: 7600 },
+            { id: 3, title: "إضاءة حائط ذكية بتقنية الواي فاي، 9 قطع، متزامنة مع الموسيقى بألوان متعددة، أكثر من 40 مشهدًا ديناميكيًا، تعمل مAlexa وGoogle Assistant، قطاع إضاءة LED للديكور المنزلي والنوادي والبارات والمنزل.", img: ["WhatsApp Image 2026-06-19 at 2.46.08 PM.jpeg", "WhatsApp Image 2026-06-19 at 2.47.22 PM.jpeg"], price: 5500 },
+            { id: 4, title: "معالج ايه ام دي رايزن™ 5 8400F", img: ["WhatsApp Image 2026-06-19 at 2.50.46 PM.jpeg", "WhatsApp Image 2026-06-19 at 2.51.06 PM.jpeg"], price: 11000 },
+            { id: 5, title: "كيسة كمبيوتر ميد تاور ATX الاصدار الابيض موديل هيليوس ستريكس ROG من اسوس، مع الواح زجاج مقوى فاميه وهيكل الومنيوم مصقول وتقنية اورا للمزامنة", img: ["WhatsApp Image 2026-06-19 at 2.58.19 PM.jpeg", "WhatsApp Image 2026-06-19 at 3.00.49 PM.jpeg"], price: 16500 },
+            { id: 6, title: "كيس كمبيوتر ‎XIGMATE.K Sky II Mid‑Tower + باور سبلاي 600 واط 80+ White + 4 مراوح مدمجة RGB – تصميم ألعاب عصري وتجميعات احترافية", img: ["WhatsApp Image 2026-06-19 at 3.03.41 PM.jpeg", "WhatsApp Image 2026-06-19 at 3.03.22 PM.jpeg"], price: 7000 }
+        ];
+
+        let cart = [];
+        let currentProduct = null;
+        let selectedQty = 1;
+        let currentSlideIndex = 0;
+        let selectedPaymentMethod = 'كاش عند الاستلام';
+
+        const grid = document.getElementById('grid');
+        products.forEach(product => {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.onclick = () => openModal(product.id);
+            card.innerHTML = `<div class="product-img-wrapper"><img src="${product.img[0]}" class="product-img"></div><div class="product-info"><h4>${product.title}</h4><p>${product.price} ج.م</p></div>`;
+            grid.appendChild(card);
+        });
+
+        let userProfile = JSON.parse(localStorage.getItem('userProfile')) || null;
+        let orderHistory = JSON.parse(localStorage.getItem('orderHistory')) || [];
+
+        function openModal(id) {
+            currentProduct = products.find(p => p.id === id);
+            currentSlideIndex = 0; selectedQty = 1;
+            document.getElementById('mTitle').innerText = currentProduct.title;
+            updateSlide();
+            const qtyContainer = document.getElementById('mQuantities');
+            qtyContainer.innerHTML = '';
+            for (let i = 1; i <= 5; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'qty-btn' + (i === 1 ? ' selected' : '');
+                btn.innerText = i;
+                btn.onclick = (e) => { e.stopPropagation(); selectQuantity(i, btn); };
+                qtyContainer.appendChild(btn);
+            }
+            document.getElementById('mPrice').innerText = `${currentProduct.price} جنيه`;
+            document.getElementById('productModal').classList.add('active');
+        }
+
+        function closeModal() { document.getElementById('productModal').classList.remove('active'); }
+        function changeSlide(dir) {
+            if (!currentProduct) return;
+            currentSlideIndex = (currentSlideIndex + dir + currentProduct.img.length) % currentProduct.img.length;
+            updateSlide();
+        }
+        function updateSlide() { document.getElementById('mImg').src = currentProduct.img[currentSlideIndex]; }
+        function selectQuantity(qty, el) {
+            selectedQty = qty;
+            document.querySelectorAll('.qty-btn').forEach(b => b.classList.remove('selected'));
+            el.classList.add('selected');
+            document.getElementById('mPrice').innerText = `${currentProduct.price * qty} جنيه`;
+        }
+
+        function addToCart() {
+            cart.push({ id: currentProduct.id, title: currentProduct.title, quantity: selectedQty, price: currentProduct.price * selectedQty });
+            updateCartUI(); closeModal(); toggleSidebar(true);
+        }
+
+        function toggleSidebar(show) {
+            if(show) closeAllSidebars();
+            document.getElementById('sidebar').classList.toggle('active', show);
+            document.getElementById('overlay').classList.toggle('active', show);
+        }
+
+        function toggleAccountSidebar(show) {
+            if(show) {
+                closeAllSidebars();
+                const content = document.getElementById('accountInfoContent');
+                let htmlContent = '';
+                
+                if(userProfile) {
+                    htmlContent += `<div class="info-box"><span>الاسم:</span><p>${userProfile.name}</p></div><div class="info-box"><span>رقم الموبايل:</span><p>${userProfile.phone}</p></div><div class="info-box"><span>العنوان:</span><p>${userProfile.address}</p></div>`;
+                } else {
+                    htmlContent += `<p style="text-align:center; padding:10px;">لا توجد بيانات شخصية مسجلة.</p>`;
+                }
+                
+                htmlContent += `<h4 class="order-history-title"><i class="fas fa-box"></i> طلباتك السابقة:</h4>`;
+                
+                if(orderHistory && orderHistory.length > 0) {
+                    orderHistory.forEach((order, idx) => {
+                        htmlContent += `
+                            <div class="info-box" style="border-right: 4px solid var(--accent);">
+                                <span>طلب رقم #${idx + 1} - طريقة الدفع: ${order.paymentMethod}</span>
+                                <p style="font-size:13px; color:var(--text-muted); margin-bottom:5px;">المنتجات:</p>
+                                <ul style="list-style:none; padding-right:10px; font-size:13px; margin-bottom:5px;">
+                                    ${order.items.map(item => `<li>- ${item.title} (عدد: ${item.quantity})</li>`).join('')}
+                                </ul>
+                                <span>الإجمالي: <strong style="color:var(--accent)">${order.total} جنيه</strong></span>
+                            </div>`;
+                    });
+                } else {
+                    htmlContent += `<p style="text-align:center; padding:10px; font-size:13px; color:var(--text-muted);">لا توجد طلبات سابقة بعد.</p>`;
+                }
+                
+                content.innerHTML = htmlContent;
+                document.getElementById('accountSidebar').classList.add('active');
+                document.getElementById('overlay').classList.add('active');
+            }
+        }
+
+        function closeAllSidebars() {
+            document.getElementById('sidebar').classList.remove('active');
+            document.getElementById('accountSidebar').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+        }
+
+        function updateCartUI() {
+            document.getElementById('cartCount').innerText = cart.length;
+            const container = document.getElementById('cartItems');
+            container.innerHTML = ''; let total = 0;
+            cart.forEach((item, index) => {
+                total += item.price;
+                const div = document.createElement('div');
+                div.className = 'cart-item';
+                div.innerHTML = `<div class="cart-item-details"><div class="cart-item-title">${item.title}</div><div class="cart-item-price">${item.price} ج.م</div></div><i class="fas fa-trash-alt remove-item" onclick="removeItemFromCart(event, ${index})"></i>`;
+                container.appendChild(div);
+            });
+            document.getElementById('totalPrice').innerText = total;
+        }
+
+        // كود تشغيل أزرار طرق الدفع وتغيير الـ active
+        document.getElementById('methodCod').onclick = function() {
+            selectedPaymentMethod = 'كاش عند الاستلام';
+            this.classList.add('active');
+            document.getElementById('methodVisa').classList.remove('active');
+        };
+        
+        document.getElementById('methodVisa').onclick = function() {
+            selectedPaymentMethod = 'الدفع بالفيزا';
+            this.classList.add('active');
+            document.getElementById('methodCod').classList.remove('active');
+        };
+
+        window.removeItemFromCart = (e, idx) => { e.stopPropagation(); cart.splice(idx, 1); updateCartUI(); };
+        document.getElementById('cartIconBtn').onclick = () => toggleSidebar(true);
+        document.getElementById('accountIconBtn').onclick = () => toggleAccountSidebar(true);
+        document.getElementById('addToCartBtn').onclick = addToCart;
+        document.getElementById('toStep2Btn').onclick = () => { if(cart.length > 0) { document.getElementById('step1').style.display = 'none'; document.getElementById('step2').style.display = 'flex'; } };
+        document.getElementById('backToStep1Btn').onclick = () => { document.getElementById('step1').style.display = 'flex'; document.getElementById('step2').style.display = 'none'; };
+        document.getElementById('reloadBtn').onclick = () => location.reload();
+        
+        document.getElementById('submitOrderBtn').onclick = function() {
+            const name = document.getElementById('uName').value;
+            const phone = document.getElementById('uPhone').value;
+            const address = document.getElementById('uAddress').value;
+            if(!name || !phone || !address) return alert('برجاء إدخال البيانات');
+            
+            localStorage.setItem('userProfile', JSON.stringify({name, phone, address}));
+            
+            // حفظ الطلب الجديد في مصفوفة الطلبات
+            const total = document.getElementById('totalPrice').innerText;
+            const newOrder = {
+                items: [...cart],
+                total: total,
+                paymentMethod: selectedPaymentMethod
+            };
+            orderHistory.push(newOrder);
+            localStorage.setItem('orderHistory', JSON.stringify(orderHistory));
+            
+            document.getElementById('success-screen').style.display = 'flex';
+        };
+    </script>
+</body>
+</html>
