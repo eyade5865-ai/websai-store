@@ -251,16 +251,24 @@
         const db = firebase.firestore();
 
         const products = [
-            { id: 1, title: "كولر ماستر", img: ["WhatsApp Image 2026-06-18 at 6.06.33 PM.jpeg", "WhatsApp Image 2026-06-18 at 6.06.34 PM.jpeg"], price: 1000 },
-            { id: 2, title: "وحدة تخزين من ليكسار 1.0 تيرا بايت PCI Express x4 سعة 1.0 TB موديل NQ780 بتقنية PCIe متوافق مع سطح المكتب محرك الحالة الصلبة", img: ["WhatsApp Image 2026-06-19 at 2.33.45 PM.jpeg", "WhatsApp Image 2026-06-19 at 2.33.44 PM.jpeg"], price: 7600 },
-            { id: 3, title: "إضاءة حائط ذكية بتقنية الواي فاي، 9 قطع، متزامنة مع الموسيقى بألوان متعددة، أكثر من 40 مشهدًا ديناميكيًا، تعمل مAlexa وGoogle Assistant، قطاع إضاءة LED للديكور المنزلي والنوادي والبارات والمنزل.", img: ["WhatsApp Image 2026-06-19 at 2.46.08 PM.jpeg", "WhatsApp Image 2026-06-19 at 2.47.22 PM.jpeg"], price: 5500 },
-            { id: 4, title: "معالج ايه ام دي رايزن™ 5 8400F", img: ["WhatsApp Image 2026-06-19 at 2.50.46 PM.jpeg", "WhatsApp Image 2026-06-19 at 2.51.06 PM.jpeg"], price: 11000 },
-            { id: 5, title: "كيسة كمبيوتر ميد تاور ATX الاصدار الابيض موديل هيليوس ستريكس ROG من اسوس، مع الواح زجاج مقوى فاميه وهيكل الومنيوم مصقول وتقنية اورا للمزامنة", img: ["WhatsApp Image 2026-06-19 at 2.58.19 PM.jpeg", "WhatsApp Image 2026-06-19 at 3.00.49 PM.jpeg"], price: 16500 },
-            { id: 6, title: "كيس كمبيوتر ‎XIGMATE.K Sky II Mid‑Tower + باور سبلاي 600 واط 80+ White + 4 مراوح مدمجة RGB – تصميم ألعاب عصري وتجميعات احترافية", img: ["WhatsApp Image 2026-06-19 at 3.03.41 PM.jpeg", "WhatsApp Image 2026-06-19 at 3.03.22 PM.jpeg"], price: 7000 }
+            { id: 1, title: "out ", img: ["WhatsApp Image 2026-06-18 at 6.06.33 PM.jpeg", "WhatsApp Image 2026-06-18 at 6.06.34 PM.jpeg"], price: 1000 },
+            { id: 2, title: "out", img: ["WhatsApp Image 2026-06-19 at 2.33.45 PM.jpeg", "WhatsApp Image 2026-06-19 at 2.33.44 PM.jpeg"], price: 7600 },
+            { id: 3, title: "out", img: ["WhatsApp Image 2026-06-19 at 2.46.08 PM.jpeg", "WhatsApp Image 2026-06-19 at 2.47.22 PM.jpeg"], price: 5500 },
+            { id: 4, title: "معالج AMD Ryzen 5 8400F  الدفع فيزا", img: ["WhatsApp Image 2026-06-19 at 2.50.46 PM.jpeg", "WhatsApp Image 2026-06-19 at 2.51.06 PM.jpeg"], price: 11000 },
+            { id: 5, title: "كيسة ASUS ROG Strix Helios   الدفع فيزا", img: ["WhatsApp Image 2026-06-19 at 2.58.19 PM.jpeg", "WhatsApp Image 2026-06-19 at 3.00.49 PM.jpeg"], price: 16500 },
+            { id: 6, title: "كيسة XIGMATEK Sky II باور 600د   الدفع فيزا ", img: ["WhatsApp Image 2026-06-19 at 3.03.41 PM.jpeg", "WhatsApp Image 2026-06-19 at 3.03.22 PM.jpeg"], price: 7000 },
+            { id: 7, title: "فواحه RGB إضاءة USB تتفاعل مع الموسيقى متعدده الاستخدام الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-20 155901.png", "Screenshot 2026-06-20 165750.png"], price: 350 },
+            { id: 8, title: "Samsung F9 Pro Plus الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-20 154946.png", "Screenshot 2026-06-20 155031.png"], price: 575 },
+            { id: 9, title: "سماعة رأس محيطية 7.1د الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-20 165114.png", "Screenshot 2026-06-20 154736.png"], price: 735 },
+            { id: 10, title: "عرض قطعتين كاميرا المراقبة البانورامية المزدوجة الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-20 162314.png", "Screenshot 2026-06-20 164852.png"], price: 1200 },
+            { id: 11, title: "سبيكر الدبدوب الكيوت الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-20 160733.png", "Screenshot 2026-06-20 164411.png"], price: 450 },
+            { id: 12, title: "EARBUDS M10  الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-20 160208.png", "Screenshot 2026-06-20 171625.png"], price: 450 },
+            { id: 14, title: "ماوس لاسلكي احترافي", img: ["image14_1.jpg", "image14_2.jpg"], price: 400 },
+            { id: 13, title: "جهاز روتر انترنت 5G   الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-20 160442.png", "Screenshot 2026-06-20 172107.png"], price: 1200 },
         ];
 
         let cart = [];
-        let currentProduct = null;
+        let currentProduct = null; 
         let selectedQty = 1;
         let currentSlideIndex = 0;
         let selectedPaymentMethod = 'كاش عند الاستلام';
@@ -376,7 +384,6 @@
             document.getElementById('totalPrice').innerText = total;
         }
 
-        // كود تشغيل أزرار طرق الدفع وتغيير الـ active
         document.getElementById('methodCod').onclick = function() {
             selectedPaymentMethod = 'كاش عند الاستلام';
             this.classList.add('active');
@@ -405,7 +412,6 @@
             
             localStorage.setItem('userProfile', JSON.stringify({name, phone, address}));
             
-            // حفظ الطلب الجديد في مصفوفة الطلبات
             const total = document.getElementById('totalPrice').innerText;
             const newOrder = {
                 items: [...cart],
