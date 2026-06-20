@@ -62,9 +62,17 @@
         }
 
         .container { max-width: 1200px; margin: 140px auto 40px; padding: 0 16px; }
-        .section-title { text-align: center; margin-bottom: 30px; font-size: 24px; color: var(--text); font-weight: 800; }
+        .section-title { text-align: center; margin-bottom: 20px; font-size: 24px; color: var(--text); font-weight: 800; }
         .section-title::after { content: ''; display: block; width: 50px; height: 4px; background: var(--accent); margin: 8px auto 0; border-radius: 10px; }
         
+        /* تصميم شريط البحث المضاف */
+        .search-wrapper { max-width: 500px; margin: 0 auto 30px; position: relative; padding: 0 10px; }
+        .search-input-container { position: relative; width: 100%; }
+        .search-input { width: 100%; padding: 14px 45px 14px 20px; background: var(--card-bg); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-sm); color: var(--text); font-size: 14px; font-weight: 600; outline: none; transition: var(--transition); }
+        .search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(6,182,212,0.15); }
+        .search-icon { position: absolute; top: 50%; right: 18px; transform: translateY(-50%); color: var(--text-muted); font-size: 16px; pointer-events: none; transition: var(--transition); }
+        .search-input:focus + .search-icon { color: var(--accent); }
+
         .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
 
         .product-card { 
@@ -162,6 +170,14 @@
 
     <div class="container">
         <h2 class="section-title">أهلاً بك في website store</h2>
+        
+        <div class="search-wrapper">
+            <div class="search-input-container">
+                <input type="text" id="searchInput" class="search-input" placeholder="ابحث عن المنتجات...">
+                <i class="fas fa-search search-icon"></i>
+            </div>
+        </div>
+
         <div class="products-grid" id="grid"></div>
     </div>
 
@@ -258,13 +274,17 @@
             { id: 5, title: "كيسة ASUS ROG Strix Helios   الدفع فيزا", img: ["WhatsApp Image 2026-06-19 at 2.58.19 PM.jpeg", "WhatsApp Image 2026-06-19 at 3.00.49 PM.jpeg"], price: 16500 },
             { id: 6, title: "كيسة XIGMATEK Sky II باور 600د   الدفع فيزا ", img: ["WhatsApp Image 2026-06-19 at 3.03.41 PM.jpeg", "WhatsApp Image 2026-06-19 at 3.03.22 PM.jpeg"], price: 7000 },
             { id: 7, title: "فواحه RGB إضاءة USB تتفاعل مع الموسيقى متعدده الاستخدام الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-20 155901.png", "Screenshot 2026-06-20 165750.png"], price: 350 },
-            { id: 8, title: "Samsung F9 Pro Plus الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-20 154946.png", "Screenshot 2026-06-20 155031.png"], price: 570 },
-            { id: 9, title: "سماعة رأس محيطية 7.1د الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-20 165114.png", "Screenshot 2026-06-20 154736.png"], price: 750 },
+            { id: 8, title: "Samsung F9 Pro Plus الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-20 154946.png", "Screenshot 2026-06-20 155031.png"], price: 550 },
+            { id: 9, title: "سماعة رأس محيطية 7.1د الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-20 165114.png", "Screenshot 2026-06-20 154736.png"], price: 735 },
             { id: 10, title: "عرض قطعتين كاميرا المراقبة البانورامية المزدوجة الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-20 162314.png", "Screenshot 2026-06-20 164852.png"], price: 1200 },
-            { id: 11, title: "سبيكر الدبدوب الكيوت الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-20 160733.png", "Screenshot 2026-06-20 164411.png"], price: 430 },
+            { id: 11, title: "سبيكر الدبدوب الكيوت الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-20 160733.png", "Screenshot 2026-06-20 164411.png"], price: 440 },
             { id: 12, title: "EARBUDS M10  الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-20 160208.png", "Screenshot 2026-06-20 171625.png"], price: 280 },
-           { id: 13, title: "جهاز روتر انترن ت 5G   الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-20 160442.png", "Screenshot 2026-06-20 172107.png"], price: out },
-           { id: 14, title: "ساعة سمارت T800 الحديث   الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-20 201503.png", "Screenshot 2026-06-20 201617.png"], price: 480 },
+            { id: 13, title: "out", img: ["Screenshot 2026-06-20 160442.png", "Screenshot 2026-06-20 172107.png"], price: 1200},
+            { id: 14, title: "ساعة سمارت T800 الحديث   الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-20 201503.png", "Screenshot 2026-06-20 201617.png"], price: 480 },
+            { id: 15, title: " Airpods pro sim original Black  الحديث   الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-20 154853.png", "Screenshot 2026-06-21 012717.png"], price: 600 },
+            { id: 16, title: " عرض جرس الباب الحديث بكاميرا + إنذار الباب والشباك اللاسلكي  الحديث   الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-21 012608.png", "Screenshot 2026-06-21 013018.png"], price: 1200},
+            { id: 17, title: " سيارة لادا بريموت كنترول الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-21 013320.png", "Screenshot 2026-06-21 013320.png"], price: 370},
+            { id: 18, title: " الخلاط المحمول الترند الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-21 013755.png", "Screenshot 2026-06-21 013854.png"], price: 590},
         ];
 
         let cart = [];
@@ -273,14 +293,30 @@
         let currentSlideIndex = 0;
         let selectedPaymentMethod = 'كاش عند الاستلام';
 
+        // دالة لعرض المنتجات في الشبكة (معدلة لتدعم البحث وتصفية المنتجات)
         const grid = document.getElementById('grid');
-        products.forEach(product => {
-            const card = document.createElement('div');
-            card.className = 'product-card';
-            card.onclick = () => openModal(product.id);
-            card.innerHTML = `<div class="product-img-wrapper"><img src="${product.img[0]}" class="product-img"></div><div class="product-info"><h4>${product.title}</h4><p>${product.price} ج.م</p></div>`;
-            grid.appendChild(card);
-        });
+        function displayProducts(productsList) {
+            grid.innerHTML = '';
+            productsList.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.onclick = () => openModal(product.id);
+                card.innerHTML = `<div class="product-img-wrapper"><img src="${product.img[0]}" class="product-img"></div><div class="product-info"><h4>${product.title}</h4><p>${product.price} ج.م</p></div>`;
+                grid.appendChild(card);
+            });
+        }
+
+        // عرض كل المنتجات عند تشغيل الصفحة لأول مرة
+        displayProducts(products);
+
+        // وظيفة شريط البحث المضافة (تحديث فوري للمنتجات أثناء الكتابة)
+        document.getElementById('searchInput').oninput = function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            const filteredProducts = products.filter(product => 
+                product.title.toLowerCase().includes(searchTerm)
+            );
+            displayProducts(filteredProducts);
+        };
 
         let userProfile = JSON.parse(localStorage.getItem('userProfile')) || null;
         let orderHistory = JSON.parse(localStorage.getItem('orderHistory')) || [];
