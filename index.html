@@ -224,30 +224,30 @@
                 
                 <select id="uGovernorate" class="input-field">
                     <option value="" disabled selected>اختر المحافظة</option>
-                    <option value="Cairo">القاهرة</option>
-                    <option value="Giza">الجيزة</option>
-                    <option value="Alexandria">الإسكندرية</option>
-                    <option value="Qalyubia">القليوبية</option>
-                    <option value="Gharbia">الغربية</option>
-                    <option value="Monufia">المنوفية</option>
-                    <option value="Sharqia">الشرقية</option>
-                    <option value="Dakahlia">الدقهلية</option>
-                    <option value="Beheira">البحيرة</option>
-                    <option value="Damietta">دمياط</option>
-                    <option value="Matrouh">مطروح</option>
-                    <option value="Suez">السويس</option>
-                    <option value="Ismailia">الإسماعيلية</option>
-                    <option value="Port Said">بورسعيد</option>
-                    <option value="Fayoum">الفيوم</option>
-                    <option value="Beni Suef">بني سويف</option>
-                    <option value="Minya">المنيا</option>
-                    <option value="Asyut">أسيوط</option>
-                    <option value="Sohag">سوهاج</option>
-                    <option value="Qena">قنا</option>
-                    <option value="Luxor">الأقصر</option>
-                    <option value="Aswan">أسوان</option>
-                    <option value="Red Sea">البحر الأحمر</option>
-                    <option value="New Valley">الوادي الجديد</option>
+                    <option value="القاهرة">القاهرة</option>
+                    <option value="الجيزة">الجيزة</option>
+                    <option value="الإسكندرية">الإسكندرية</option>
+                    <option value="القليوبية">القليوبية</option>
+                    <option value="الغربية">الغربية</option>
+                    <option value="المنوفية">المنوفية</option>
+                    <option value="الشرقية">الشرقية</option>
+                    <option value="الدقهلية">الدقهلية</option>
+                    <option value="البحيرة">البحيرة</option>
+                    <option value="دمياط">دمياط</option>
+                    <option value="مطروح">مطروح</option>
+                    <option value="السويس">السويس</option>
+                    <option value="الإسماعيلية">الإسماعيلية</option>
+                    <option value="بورسعيد">بورسعيد</option>
+                    <option value="الفيوم">الفيوم</option>
+                    <option value="بني سويف">بني سويف</option>
+                    <option value="المنيا">المنيا</option>
+                    <option value="أسيوط">أسيوط</option>
+                    <option value="سوهاج">سوهاج</option>
+                    <option value="قنا">قنا</option>
+                    <option value="الأقصر">الأقصر</option>
+                    <option value="أسوان">أسوان</option>
+                    <option value="البحر الأحمر">البحر الأحمر</option>
+                    <option value="الوادي الجديد">الوادي الجديد</option>
                 </select>
                 
                 <div class="info-box" style="margin-top: 10px; background: rgba(6, 182, 212, 0.05); border: 1px solid rgba(6, 182, 212, 0.2);">
@@ -276,7 +276,7 @@
     </div>
 
     <script>
-        // إعدادات الـ Firebase الأصلية بتاعتك (ممنوع تغيير الـ apiKey هنا)
+        // إعدادات Firebase الخاصة بـ "website store"
         const firebaseConfig = {
             apiKey: "AIzaSyD5aizF141eE6DXYXkD04fNlFiNRXi73Mw",
             authDomain: "eeeee-68481.firebaseapp.com",
@@ -286,14 +286,9 @@
             appId: "1:603588366719:web:2f737779b36c9c34c98a4a"
         };
 
-        // تفعيل الفايربيز
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // 🚨 حط مفتاح الربط (API Key) بتاع تاجر هنا في المتغير ده
-        const taagerApiKey = "TK-*****7F9D"; 
-
-        // إضافة الـ sku لكل منتج (غير الأكواد دي للأكواد الحقيقية من تاجر)
         const products = [
             { id: 1, title: "out ", img: ["WhatsApp Image 2026-06-18 at 6.06.33 PM.jpeg", "WhatsApp Image 2026-06-18 at 6.06.34 PM.jpeg"], price: 1000, sku: "TG-001" },
             { id: 2, title: "out", img: ["WhatsApp Image 2026-06-19 at 2.33.45 PM.jpeg", "WhatsApp Image 2026-06-19 at 2.33.44 PM.jpeg"], price: 7600, sku: "TG-002" },
@@ -301,7 +296,7 @@
             { id: 4, title: "معالج AMD Ryzen 5 8400F", img: ["WhatsApp Image 2026-06-19 at 2.50.46 PM.jpeg", "WhatsApp Image 2026-06-19 at 2.51.06 PM.jpeg"], price: 11000, sku: "TG-004" },
             { id: 5, title: "كيسة ASUS ROG Strix Helios", img: ["WhatsApp Image 2026-06-19 at 2.58.19 PM.jpeg", "WhatsApp Image 2026-06-19 at 3.00.49 PM.jpeg"], price: 16500, sku: "TG-005" },
             { id: 6, title: "كيسة XIGMATEK Sky II باور 600د", img: ["WhatsApp Image 2026-06-19 at 3.03.41 PM.jpeg", "WhatsApp Image 2026-06-19 at 3.03.22 PM.jpeg"], price: 7000, sku: "TG-006" },
-            { id: 7, title: "فواحه RGB إضاءة USB تتفاعل مع الموسيقى متعدده الاستخدام", img: ["Screenshot 2026-06-20 155901.png", "Screenshot 2026-06-20 165750.png"], price: 350, sku: "TG-007" },
+            { id: 7, title: "فواحه RGB إضاءة USB تتفاعل مع الموسيقى متعدده الاستخدام", img: ["Screenshot 2026-06-20 155901.png", "Screenshot 2026-06-20 165750.png"], price: 350, sku: "6218776092" }, 
             { id: 8, title: "Samsung F9 Pro Plus", img: ["Screenshot 2026-06-20 154946.png", "Screenshot 2026-06-20 155031.png"], price: 550, sku: "TG-008" },
             { id: 9, title: "سماعة رأس محيطية 7.1د", img: ["Screenshot 2026-06-20 165114.png", "Screenshot 2026-06-20 154736.png"], price: 735, sku: "TG-009" },
             { id: 10, title: "عرض قطعتين كاميرا المراقبة البانورامية المزدوجة", img: ["Screenshot 2026-06-20 162314.png", "Screenshot 2026-06-20 164852.png"], price: 1200, sku: "TG-010" },
@@ -384,7 +379,7 @@
                 title: currentProduct.title, 
                 quantity: selectedQty, 
                 price: currentProduct.price * selectedQty,
-                sku: currentProduct.sku // حفظ الـ sku في السلة
+                sku: currentProduct.sku
             });
             updateCartUI(); closeModal(); toggleSidebar(true);
         }
@@ -459,13 +454,16 @@
         document.getElementById('backToStep1Btn').onclick = () => { document.getElementById('step1').style.display = 'flex'; document.getElementById('step2').style.display = 'none'; };
         document.getElementById('reloadBtn').onclick = () => location.reload();
         
+        // 🛠️ الفانكشن دلوقتي صافيه ومفيهاش أي Fetch خارجي يوقف الكود
         document.getElementById('submitOrderBtn').onclick = function() {
             const name = document.getElementById('uName').value;
             const phone = document.getElementById('uPhone').value;
             const address = document.getElementById('uAddress').value;
             const governorate = document.getElementById('uGovernorate').value;
             
-            if(!name || !phone || !address || !governorate) return alert('برجاء إدخال كافة البيانات واختيار المحافظة');
+            if(!name || !phone || !address || !governorate) {
+                return alert('برجاء إدخال كافة البيانات واختيار المحافظة');
+            }
             
             localStorage.setItem('userProfile', JSON.stringify({name, phone, address, governorate}));
             
@@ -476,7 +474,7 @@
                 paymentMethod: selectedPaymentMethod
             };
             
-            // 1. إرسال الطلب أولاً لقاعدة البيانات الـ Firestore بتاعتك
+            // رفع البيانات لـ Firebase الأساسي
             db.collection("orders").add({
                 customerName: name,
                 customerPhone: phone,
@@ -485,47 +483,28 @@
                 paymentMethod: selectedPaymentMethod,
                 totalAmount: total,
                 items: cart,
+                status: "pending",
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             })
             .then((docRef) => {
-                console.log("Order saved in Firestore with ID: ", docRef.id);
+                console.log("Order saved successfully in Firestore: ", docRef.id);
                 
-                // 2. إرسال الطلب تلقائياً لـ منصة تاجر عبر الـ API
-                // نقوم بإرسال كل منتج في السلة كطلب منفصل لتاجر أو حسب نظامهم
-                cart.forEach(item => {
-                    fetch('https://api.taager.com/v1/orders', { // رابط الـ API التجريبي لتاجر
-                        method: 'POST',
-                        headers: {
-                            'Authorization': `Bearer ${taagerApiKey}`,
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            customerName: name,
-                            customerPhone: phone,
-                            shippingAddress: address,
-                            governorate: governorate,
-                            productSku: item.sku, // الـ SKU الخاص بتاجر اللي ربطناه فوق
-                            quantity: item.quantity
-                        })
-                    })
-                    .then(res => res.json())
-                    .then(taagerData => {
-                        console.log("Sent to Taager successfully:", taagerData);
-                    })
-                    .catch(err => {
-                        console.error("Error sending to Taager:", err);
-                    });
-                });
-
+                // حفظ في الهيستوري المحلي للمتصفح
                 orderHistory.push(newOrder);
                 localStorage.setItem('orderHistory', JSON.stringify(orderHistory));
                 
-                document.getElementById('successMessage').innerText = `طلبك مسجل برقم تتبع: ${docRef.id}`;
+                // تفريغ السلة وقفل القوائم الجانبية
+                cart = [];
+                updateCartUI();
+                closeAllSidebars();
+                
+                // تشغيل شاشة النجاح
+                document.getElementById('successMessage').innerText = `طلبك رقم (#${docRef.id.substring(0,6)}) تم تسجيله بنجاح.\nإجمالي الحساب: ${total} جنيه.\n\nسيتم التواصل معك هاتفياً لتأكيد الشحن.`;
                 document.getElementById('success-screen').style.display = 'flex';
             })
             .catch((error) => {
-                console.error("Firestore Error: ", error);
-                alert("حدثت مشكلة أثناء إرسال الطلب، يرجى إعادة المحاولة.");
+                console.error("Error adding document: ", error);
+                alert("حدث عطل أثناء الاتصال بقاعدة البيانات، تأكد من إعدادات الـ Rules في Firebase.");
             });
         };
     </script>
