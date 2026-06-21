@@ -306,8 +306,15 @@
             { id: 14, title: "ساعة سمارت T800 الحديث", img: ["Screenshot 2026-06-20 201503.png", "Screenshot 2026-06-20 201617.png"], price: 480, sku: "TG-014" },
             { id: 15, title: "Airpods pro sim original Black الحديث", img: ["Screenshot 2026-06-20 154853.png", "Screenshot 2026-06-21 012717.png"], price: 600, sku: "TG-015" },
             { id: 16, title: "عرض جرس الباب الحديث بكاميرا + إنذار الباب والشباك اللاسلكي الحديث", img: ["Screenshot 2026-06-21 012608.png", "Screenshot 2026-06-21 013018.png"], price: 1200, sku: "TG-016"},
-            { id: 17, title: "سيارة لادا بريموت كنترول", img: ["Screenshot 2026-06-21 013320.png", "Screenshot 2026-06-21 013320.png"], price: 370, sku: "TG-017"},
+            { id: 17, title: "سيارة لادا بريموت كنترول", img: ["Screenshot 2026-06-21 013320.png", "Screenshot 2026-06-20 155556.png"], price: 370, sku: "TG-017"},
             { id: 18, title: "الخلاط المحمول الترند", img: ["Screenshot 2026-06-21 013755.png", "Screenshot 2026-06-21 013854.png"], price: 590, sku: "TG-018"},
+            { id: 19, title: "كوستر للتسخين متعدد الاستخدامات", img: ["Screenshot 2026-06-21 120703.png", "Screenshot 2026-06-21 120816.png"], price: 230, sku: "TG-018"},
+            { id: 20, title: "حلة تيفال بطوط 5 لتر", img: ["Screenshot 2026-06-20 201243.png", "Screenshot 2026-06-20 201155.png"], price: 930, sku: "TG-018"},
+            { id: 21, title: "عربية سابق و لاحق", img: ["Screenshot 2026-06-21 121317.png", "Screenshot 2026-06-21 121350.png"], price: 340, sku: "TG-018"},
+            { id: 22, title: "عربية سابق و لاحق", img: ["Screenshot 2026-06-21 121812.png", "Screenshot 2026-06-21 121735.png"], price: 340, sku: "TG-018"},
+            { id: 23, title: "عربية سابق و لاحق", img: ["Screenshot 2026-06-21 121952.png", "Screenshot 2026-06-21 121916.png"], price: 340, sku: "TG-018"},
+            { id: 23, title: "ماسك الشبح", img: ["Screenshot 2026-06-20 155413.png", "Screenshot 2026-06-21 123035.png"], price: 280, sku: "TG-018"},
+
         ];
 
         let cart = [];
@@ -454,7 +461,7 @@
         document.getElementById('backToStep1Btn').onclick = () => { document.getElementById('step1').style.display = 'flex'; document.getElementById('step2').style.display = 'none'; };
         document.getElementById('reloadBtn').onclick = () => location.reload();
         
-        // 🛠️ الفانكشن دلوقتي صافيه ومفيهاش أي Fetch خارجي يوقف الكود
+        // حدث تأكيد وإرسال الطلب وحفظ البيانات في Firestore
         document.getElementById('submitOrderBtn').onclick = function() {
             const name = document.getElementById('uName').value;
             const phone = document.getElementById('uPhone').value;
@@ -493,18 +500,21 @@
                 orderHistory.push(newOrder);
                 localStorage.setItem('orderHistory', JSON.stringify(orderHistory));
                 
-                // تفريغ السلة وقفل القوائم الجانبية
+                // تحديث الملف الشخصي محلياً فوراً
+                userProfile = {name, phone, address, governorate};
+                
+                // تفريغ السلة وتحديث واجهتها
                 cart = [];
                 updateCartUI();
                 closeAllSidebars();
                 
-                // تشغيل شاشة النجاح
-                document.getElementById('successMessage').innerText = `طلبك رقم (#${docRef.id.substring(0,6)}) تم تسجيله بنجاح.\nإجمالي الحساب: ${total} جنيه.\n\nسيتم التواصل معك هاتفياً لتأكيد الشحن.`;
+                // عرض شاشة النجاح وكتابة رسالة الشكر والـ Data الخاصة بالعميل
+                document.getElementById('successMessage').innerText = `شكراً لك يا ${name}، تم تسجيل طلبك بقيمة ${total} جنيه بنجاح، وسيتم التواصل معك قريباً على رقم ${phone}.`;
                 document.getElementById('success-screen').style.display = 'flex';
             })
             .catch((error) => {
                 console.error("Error adding document: ", error);
-                alert("حدث عطل أثناء الاتصال بقاعدة البيانات، تأكد من إعدادات الـ Rules في Firebase.");
+                alert("عذراً، حدث خطأ أثناء إرسال الطلب. برجاء المحاولة مرة أخرى.");
             });
         };
     </script>
