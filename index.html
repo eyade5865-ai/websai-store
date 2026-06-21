@@ -113,10 +113,6 @@
         .btn { width: 100%; padding: 14px; border: none; cursor: pointer; font-weight: 700; margin-top: 12px; transition: var(--transition); border-radius: var(--radius-sm); font-size: 15px; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-buy { background: var(--accent); color: #0f172a; box-shadow: 0 5px 15px rgba(6,182,212,0.2); }
         
-        .payment-methods-toggle { display: flex; gap: 10px; margin: 15px 0; }
-        .method-btn { flex: 1; padding: 12px; border: 1px solid rgba(255,255,255,0.1); background: #0f172a; color: white; border-radius: var(--radius-sm); cursor: pointer; font-weight: 700; font-size: 13px; transition: var(--transition); text-align: center; }
-        .method-btn.active { background: var(--primary); border-color: var(--primary); }
-
         .quantity-container { display: flex; flex-wrap: wrap; gap: 10px; margin: 15px 0; justify-content: center; }
         .qty-btn { padding: 10px 16px; border: 1px solid rgba(255,255,255,0.1); background: #1e293b; cursor: pointer; border-radius: var(--radius-sm); font-weight: 700; color: var(--text); }
         .qty-btn.selected { background: var(--accent); color: #0f172a; border-color: var(--accent); }
@@ -139,7 +135,7 @@
         
         .order-history-title { font-weight: 800; font-size: 15px; color: var(--accent); margin-top: 15px; margin-bottom: 10px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; }
 
-        @media (min-width: 576px) { .products-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; } .product-img-wrapper { height: 180px; } }
+        @media (min-width: 576px) { .products-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; } .product-img-wrapper { height: 180px; } }
         @media (min-width: 768px) {
             .products-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 24px; }
             .product-img-wrapper { height: 230px; }
@@ -226,10 +222,37 @@
                 <input type="tel" id="uPhone" class="input-field" placeholder="رقم الموبايل للتواصل">
                 <input type="text" id="uAddress" class="input-field" placeholder="العنوان بالتفصيل">
                 
-                <p style="font-weight: 700; font-size: 14px; margin: 10px 0 5px; color: var(--text-muted);">طريقة الدفع:</p>
-                <div class="payment-methods-toggle">
-                    <button class="method-btn active" id="methodCod" type="button">كاش عند الاستلام</button>
-                    <button class="method-btn" id="methodVisa" type="button">الدفع بالفيزا</button>
+                <select id="uGovernorate" class="input-field">
+                    <option value="" disabled selected>اختر المحافظة</option>
+                    <option value="Cairo">القاهرة</option>
+                    <option value="Giza">الجيزة</option>
+                    <option value="Alexandria">الإسكندرية</option>
+                    <option value="Qalyubia">القليوبية</option>
+                    <option value="Gharbia">الغربية</option>
+                    <option value="Monufia">المنوفية</option>
+                    <option value="Sharqia">الشرقية</option>
+                    <option value="Dakahlia">الدقهلية</option>
+                    <option value="Beheira">البحيرة</option>
+                    <option value="Damietta">دمياط</option>
+                    <option value="Matrouh">مطروح</option>
+                    <option value="Suez">السويس</option>
+                    <option value="Ismailia">الإسماعيلية</option>
+                    <option value="Port Said">بورسعيد</option>
+                    <option value="Fayoum">الفيوم</option>
+                    <option value="Beni Suef">بني سويف</option>
+                    <option value="Minya">المنيا</option>
+                    <option value="Asyut">أسيوط</option>
+                    <option value="Sohag">سوهاج</option>
+                    <option value="Qena">قنا</option>
+                    <option value="Luxor">الأقصر</option>
+                    <option value="Aswan">أسوان</option>
+                    <option value="Red Sea">البحر الأحمر</option>
+                    <option value="New Valley">الوادي الجديد</option>
+                </select>
+                
+                <div class="info-box" style="margin-top: 10px; background: rgba(6, 182, 212, 0.05); border: 1px solid rgba(6, 182, 212, 0.2);">
+                    <span>طريقة الدفع المتوفرة:</span>
+                    <p style="color: var(--accent);"><i class="fas fa-money-bill-wave"></i> كاش عند الاستلام</p>
                 </div>
                 
                 <button class="btn btn-buy" id="submitOrderBtn" style="margin-top: 20px;"><i class="fas fa-check-circle"></i> تأكيد وإرسال الطلب</button>
@@ -253,9 +276,9 @@
     </div>
 
     <script>
-        // إعدادات الـ Firebase المحدثة بالمفتاح الجديد بالكامل
+        // إعدادات الـ Firebase الأصلية بتاعتك (ممنوع تغيير الـ apiKey هنا)
         const firebaseConfig = {
-            apiKey: "TK-bkVoBulaZBffh-t3DRLbrqFSxLOz4ehtUL0t3DYDKiIaP3A-20260620234735-0AFEA4480509082DE1748917A3651F41",
+            apiKey: "AIzaSyD5aizF141eE6DXYXkD04fNlFiNRXi73Mw",
             authDomain: "eeeee-68481.firebaseapp.com",
             projectId: "eeeee-68481",
             storageBucket: "eeeee-68481.firebasestorage.app",
@@ -263,36 +286,40 @@
             appId: "1:603588366719:web:2f737779b36c9c34c98a4a"
         };
 
-        // تهيئة الـ SDK للعمل
+        // تفعيل الفايربيز
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
+        // 🚨 حط مفتاح الربط (API Key) بتاع تاجر هنا في المتغير ده
+        const taagerApiKey = "TK-*****7F9D"; 
+
+        // إضافة الـ sku لكل منتج (غير الأكواد دي للأكواد الحقيقية من تاجر)
         const products = [
-            { id: 1, title: "out ", img: ["WhatsApp Image 2026-06-18 at 6.06.33 PM.jpeg", "WhatsApp Image 2026-06-18 at 6.06.34 PM.jpeg"], price: 1000 },
-            { id: 2, title: "out", img: ["WhatsApp Image 2026-06-19 at 2.33.45 PM.jpeg", "WhatsApp Image 2026-06-19 at 2.33.44 PM.jpeg"], price: 7600 },
-            { id: 3, title: "out", img: ["WhatsApp Image 2026-06-19 at 2.46.08 PM.jpeg", "WhatsApp Image 2026-06-19 at 2.47.22 PM.jpeg"], price: 5500 },
-            { id: 4, title: "معالج AMD Ryzen 5 8400F  الدفع فيزا", img: ["WhatsApp Image 2026-06-19 at 2.50.46 PM.jpeg", "WhatsApp Image 2026-06-19 at 2.51.06 PM.jpeg"], price: 11000 },
-            { id: 5, title: "كيسة ASUS ROG Strix Helios   الدفع فيزا", img: ["WhatsApp Image 2026-06-19 at 2.58.19 PM.jpeg", "WhatsApp Image 2026-06-19 at 3.00.49 PM.jpeg"], price: 16500 },
-            { id: 6, title: "كيسة XIGMATEK Sky II باور 600د   الدفع فيزا ", img: ["WhatsApp Image 2026-06-19 at 3.03.41 PM.jpeg", "WhatsApp Image 2026-06-19 at 3.03.22 PM.jpeg"], price: 7000 },
-            { id: 7, title: "فواحه RGB إضاءة USB تتفاعل مع الموسيقى متعدده الاستخدام الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-20 155901.png", "Screenshot 2026-06-20 165750.png"], price: 350 },
-            { id: 8, title: "Samsung F9 Pro Plus الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-20 154946.png", "Screenshot 2026-06-20 155031.png"], price: 550 },
-            { id: 9, title: "سماعة رأس محيطية 7.1د الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-20 165114.png", "Screenshot 2026-06-20 154736.png"], price: 735 },
-            { id: 10, title: "عرض قطعتين كاميرا المراقبة البانورامية المزدوجة الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-20 162314.png", "Screenshot 2026-06-20 164852.png"], price: 1200 },
-            { id: 11, title: "سبيكر الدبدوب الكيوت الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-20 160733.png", "Screenshot 2026-06-20 164411.png"], price: 440 },
-            { id: 12, title: "EARBUDS M10  الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-20 160208.png", "Screenshot 2026-06-20 171625.png"], price: 280 },
-            { id: 13, title: "out", img: ["Screenshot 2026-06-20 160442.png", "Screenshot 2026-06-20 172107.png"], price: 1200},
-            { id: 14, title: "ساعة سمارت T800 الحديث   الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-20 201503.png", "Screenshot 2026-06-20 201617.png"], price: 480 },
-            { id: 15, title: " Airpods pro sim original Black  الحديث   الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-20 154853.png", "Screenshot 2026-06-21 012717.png"], price: 600 },
-            { id: 16, title: " عرض جرس الباب الحديث بكاميرا + إنذار الباب والشباك اللاسلكي  الحديث   الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-21 012608.png", "Screenshot 2026-06-21 013018.png"], price: 1200},
-            { id: 17, title: " سيارة لادا بريموت كنترول الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-21 013320.png", "Screenshot 2026-06-21 013320.png"], price: 370},
-            { id: 18, title: " الخلاط المحمول الترند الدفع فيزا او عند الاستلام", img: ["Screenshot 2026-06-21 013755.png", "Screenshot 2026-06-21 013854.png"], price: 590},
+            { id: 1, title: "out ", img: ["WhatsApp Image 2026-06-18 at 6.06.33 PM.jpeg", "WhatsApp Image 2026-06-18 at 6.06.34 PM.jpeg"], price: 1000, sku: "TG-001" },
+            { id: 2, title: "out", img: ["WhatsApp Image 2026-06-19 at 2.33.45 PM.jpeg", "WhatsApp Image 2026-06-19 at 2.33.44 PM.jpeg"], price: 7600, sku: "TG-002" },
+            { id: 3, title: "out", img: ["WhatsApp Image 2026-06-19 at 2.46.08 PM.jpeg", "WhatsApp Image 2026-06-19 at 2.47.22 PM.jpeg"], price: 5500, sku: "TG-003" },
+            { id: 4, title: "معالج AMD Ryzen 5 8400F", img: ["WhatsApp Image 2026-06-19 at 2.50.46 PM.jpeg", "WhatsApp Image 2026-06-19 at 2.51.06 PM.jpeg"], price: 11000, sku: "TG-004" },
+            { id: 5, title: "كيسة ASUS ROG Strix Helios", img: ["WhatsApp Image 2026-06-19 at 2.58.19 PM.jpeg", "WhatsApp Image 2026-06-19 at 3.00.49 PM.jpeg"], price: 16500, sku: "TG-005" },
+            { id: 6, title: "كيسة XIGMATEK Sky II باور 600د", img: ["WhatsApp Image 2026-06-19 at 3.03.41 PM.jpeg", "WhatsApp Image 2026-06-19 at 3.03.22 PM.jpeg"], price: 7000, sku: "TG-006" },
+            { id: 7, title: "فواحه RGB إضاءة USB تتفاعل مع الموسيقى متعدده الاستخدام", img: ["Screenshot 2026-06-20 155901.png", "Screenshot 2026-06-20 165750.png"], price: 350, sku: "TG-007" },
+            { id: 8, title: "Samsung F9 Pro Plus", img: ["Screenshot 2026-06-20 154946.png", "Screenshot 2026-06-20 155031.png"], price: 550, sku: "TG-008" },
+            { id: 9, title: "سماعة رأس محيطية 7.1د", img: ["Screenshot 2026-06-20 165114.png", "Screenshot 2026-06-20 154736.png"], price: 735, sku: "TG-009" },
+            { id: 10, title: "عرض قطعتين كاميرا المراقبة البانورامية المزدوجة", img: ["Screenshot 2026-06-20 162314.png", "Screenshot 2026-06-20 164852.png"], price: 1200, sku: "TG-010" },
+            { id: 11, title: "سبيكر الدبدوب الكيوت", img: ["Screenshot 2026-06-20 160733.png", "Screenshot 2026-06-20 164411.png"], price: 440, sku: "TG-011" },
+            { id: 12, title: "EARBUDS M10", img: ["Screenshot 2026-06-20 160208.png", "Screenshot 2026-06-20 171625.png"], price: 280, sku: "TG-012" },
+            { id: 13, title: "out", img: ["Screenshot 2026-06-20 160442.png", "Screenshot 2026-06-20 172107.png"], price: 1200, sku: "TG-013"},
+            { id: 14, title: "ساعة سمارت T800 الحديث", img: ["Screenshot 2026-06-20 201503.png", "Screenshot 2026-06-20 201617.png"], price: 480, sku: "TG-014" },
+            { id: 15, title: "Airpods pro sim original Black الحديث", img: ["Screenshot 2026-06-20 154853.png", "Screenshot 2026-06-21 012717.png"], price: 600, sku: "TG-015" },
+            { id: 16, title: "عرض جرس الباب الحديث بكاميرا + إنذار الباب والشباك اللاسلكي الحديث", img: ["Screenshot 2026-06-21 012608.png", "Screenshot 2026-06-21 013018.png"], price: 1200, sku: "TG-016"},
+            { id: 17, title: "سيارة لادا بريموت كنترول", img: ["Screenshot 2026-06-21 013320.png", "Screenshot 2026-06-21 013320.png"], price: 370, sku: "TG-017"},
+            { id: 18, title: "الخلاط المحمول الترند", img: ["Screenshot 2026-06-21 013755.png", "Screenshot 2026-06-21 013854.png"], price: 590, sku: "TG-018"},
         ];
 
         let cart = [];
         let currentProduct = null; 
         let selectedQty = 1;
         let currentSlideIndex = 0;
-        let selectedPaymentMethod = 'كاش عند الاستلام';
+        const selectedPaymentMethod = 'كاش عند الاستلام';
 
         const grid = document.getElementById('grid');
         function displayProducts(productsList) {
@@ -352,7 +379,13 @@
         }
 
         function addToCart() {
-            cart.push({ id: currentProduct.id, title: currentProduct.title, quantity: selectedQty, price: currentProduct.price * selectedQty });
+            cart.push({ 
+                id: currentProduct.id, 
+                title: currentProduct.title, 
+                quantity: selectedQty, 
+                price: currentProduct.price * selectedQty,
+                sku: currentProduct.sku // حفظ الـ sku في السلة
+            });
             updateCartUI(); closeModal(); toggleSidebar(true);
         }
 
@@ -418,18 +451,6 @@
             document.getElementById('totalPrice').innerText = total;
         }
 
-        document.getElementById('methodCod').onclick = function() {
-            selectedPaymentMethod = 'كاش عند الاستلام';
-            this.classList.add('active');
-            document.getElementById('methodVisa').classList.remove('active');
-        };
-        
-        document.getElementById('methodVisa').onclick = function() {
-            selectedPaymentMethod = 'الدفع بالفيزا';
-            this.classList.add('active');
-            document.getElementById('methodCod').classList.remove('active');
-        };
-
         window.removeItemFromCart = (e, idx) => { e.stopPropagation(); cart.splice(idx, 1); updateCartUI(); };
         document.getElementById('cartIconBtn').onclick = () => toggleSidebar(true);
         document.getElementById('accountIconBtn').onclick = () => toggleAccountSidebar(true);
@@ -442,9 +463,11 @@
             const name = document.getElementById('uName').value;
             const phone = document.getElementById('uPhone').value;
             const address = document.getElementById('uAddress').value;
-            if(!name || !phone || !address) return alert('برجاء إدخال البيانات');
+            const governorate = document.getElementById('uGovernorate').value;
             
-            localStorage.setItem('userProfile', JSON.stringify({name, phone, address}));
+            if(!name || !phone || !address || !governorate) return alert('برجاء إدخال كافة البيانات واختيار المحافظة');
+            
+            localStorage.setItem('userProfile', JSON.stringify({name, phone, address, governorate}));
             
             const total = document.getElementById('totalPrice').innerText;
             const newOrder = {
@@ -453,18 +476,47 @@
                 paymentMethod: selectedPaymentMethod
             };
             
-            // إرسال الطلب بشكل مباشر لقاعدة البيانات Firestore
+            // 1. إرسال الطلب أولاً لقاعدة البيانات الـ Firestore بتاعتك
             db.collection("orders").add({
                 customerName: name,
                 customerPhone: phone,
                 customerAddress: address,
+                customerGovernorate: governorate,
                 paymentMethod: selectedPaymentMethod,
                 totalAmount: total,
                 items: cart,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             })
             .then((docRef) => {
-                console.log("Order saved with ID: ", docRef.id);
+                console.log("Order saved in Firestore with ID: ", docRef.id);
+                
+                // 2. إرسال الطلب تلقائياً لـ منصة تاجر عبر الـ API
+                // نقوم بإرسال كل منتج في السلة كطلب منفصل لتاجر أو حسب نظامهم
+                cart.forEach(item => {
+                    fetch('https://api.taager.com/v1/orders', { // رابط الـ API التجريبي لتاجر
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${taagerApiKey}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            customerName: name,
+                            customerPhone: phone,
+                            shippingAddress: address,
+                            governorate: governorate,
+                            productSku: item.sku, // الـ SKU الخاص بتاجر اللي ربطناه فوق
+                            quantity: item.quantity
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(taagerData => {
+                        console.log("Sent to Taager successfully:", taagerData);
+                    })
+                    .catch(err => {
+                        console.error("Error sending to Taager:", err);
+                    });
+                });
+
                 orderHistory.push(newOrder);
                 localStorage.setItem('orderHistory', JSON.stringify(orderHistory));
                 
